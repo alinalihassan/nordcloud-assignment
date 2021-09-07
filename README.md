@@ -4,7 +4,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Nordcloud technical assignment. The repository contains both the algorithm requested and the infrastructure/maintainability
-standards I would deem necessary and acceptable for collaboration and maintainability.
+standards I would deem necessary and acceptable for collaboration and maintainability. If you have a question on why I did something in a certain way,
+please have a look at the [design decision](#🧑‍🎨-design-decisions) section below.
 
 ## 📃 Table of Contents
 
@@ -16,10 +17,11 @@ standards I would deem necessary and acceptable for collaboration and maintainab
 - [🧪 Test](#🧪-test)
 - [👨‍💻 Deploy](#👨‍💻-deploy)
   - [☁️ Setting up a GCP Account](#☁️-setting-up-a-gcp-account)
-  - [⚙️ Configuring](#⚙️-configuring)
+  - [⚙️ Configuring secrets](#🔒-configuring-secrets)
   - [⚡ Deploying](#⚡-deploying)
   - [💣 Destroying](#💣-destroying)
   - [🧐 Checking the results](#🧐-Checking-the-results)
+- [⚙️ CI/CD](#⚙️-CI/CD)
 - [📐 Problem](#📐-problem)
 - [⚖️ License](#⚖️-license)
 
@@ -30,8 +32,10 @@ Below is a list of most of them and the reason why.
 
 - Python docstrings are formatted using reST, since it's suggested by [PEP 287](https://www.python.org/dev/peps/pep-0287/)
 - The repository does not use any dependencies, thus the testing framework used is unittest, part of the standard Python library
-- The minimum Python version is set to 3.6 due to integrated type hints which contributes greatly to maintainability.
-- The cloud vendor chosen is Google Cloud mainly because it provides sane defaults, and writing for all three public clouds would have taken too long.
+- Due to not having any dependencies, there's no linter selected for the CI or in a requirements.txt, but I strongly suggest you use one
+- The minimum Python version is set to 3.6 due to integrated type hints which contributes greatly to maintainability
+- The cloud vendor chosen is Google Cloud mainly because it provides sane defaults, and writing for all three public clouds would have taken too long
+- The terraform configuration is meant for local, single user use. I initially set up a remote backend while working on the assignment but it simply took to much time setting up a Terraform Cloud Account or required manual interaction with GCP Console to create a bucket (maybe issue on my side?), so I reverted to local state file.
 - Infrastructure is written in Terraform, since it's the most popular IaaC tool, especially for multi-cloud setups, [which are becoming more and more common](https://www.hashicorp.com/state-of-the-cloud)
 
 ## 🛠️ Install
@@ -44,10 +48,7 @@ Below is a list of most of them and the reason why.
 
 ### 🖥️ Local installation
 
-```shell
-# Install dependencies
-pip install -r requirements.txt
-```
+There are no dependencies, so you don't need to pip install anything.
 
 ## 🔬 Usage
 
@@ -100,7 +101,7 @@ gcloud auth application-default login
 Now create the project on GCP:
 ```shell
 # Create a GCP project
-gcloud projects create PROJECT_ID --name="My App"
+gcloud projects create PROJECT_ID --name="Nordcloud Assignment"
 ```
 
 Set the project you just created as the default one. This will make it easier to run the subsequent commands.
@@ -119,16 +120,17 @@ For this step, you will need to visit the dashboard:
 > 
 > The first 2 million invocations of a Cloud Function are free.
 
-### ⚙️ Configuring
+### 🔒 Configuring secrets
 
 The configuration includes an example configuration file named `terraform.tfvars.example`. You need to supply the `PROJECT_ID` from earlier
-and a region.
+and a region. Please note that the Netherlands region (europe-west4) does not support Cloud Functions. You can check out more details about regions
+and available features per region [here](https://cloud.google.com/about/locations).
 
-Copy the file and name the copy `terraform.tfvars` in the same directory. Then modify the project with your `PROJECT_ID` and `region`.
+Copy the file and name it `terraform.tfvars` in the same directory. Then modify the project with your `PROJECT_ID` and `region`.
 
 ```hcl
 project = "PROJECT_ID"
-region  = "eu-west-2"
+region  = "europe-west6"
 ```
 
 ### ⚡ Deploying
@@ -157,6 +159,12 @@ terraform destroy
 # Optional: delete the project
 gcloud projects delete PROJECT_ID
 ```
+
+## ⚙️ CI/CD
+
+The pipelines are meant to check that the build is suitable. The deploy phase is commented out. Unfortunately since I chose to keep the state file locally, it's not possible to use Terraform in the CI/CD pipeline. There's also no linter since it's dependency-free.
+
+The pipelines are set up using [GitHub Actions](https://github.com/features/actions) and are located in `.github/workflows/`.
 
 ## 📐 Problem
 
