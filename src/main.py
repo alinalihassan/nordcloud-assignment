@@ -83,15 +83,32 @@ def sample_run():
 
     find_best_station_for_devices(link_stations, devices)
 
+def get_literal_input(prompt: str):
+    # Retry until input is valid
+    while (True):
+        try:
+            value = literal_eval(input(prompt))
+            # Comma separated tuples
+            if type(value) is list and type(value[0]) is tuple:
+                return value
+            # Single tuple
+            elif type(value) is tuple:
+                return [value]
+            raise ValueError
+        except Exception:
+            print("Invalid input, please try again. Example: (1,2,3), (4,5,6)")
+
+    return None
+
 
 def main():
     link_stations: List[LinkStation] = []
-    link_stations_params = literal_eval(input("Link Stations (x, y, reach): "))
+    link_stations_params = get_literal_input("Link Stations (x, y, reach): ")
     for params in link_stations_params:
         link_stations.append(LinkStation(*params))
 
     devices: List[Device] = []
-    devices_params = literal_eval(input("Devices (x, y): "))
+    devices_params = get_literal_input("Devices (x, y): ")
     for params in devices_params:
         devices.append(Device(*params))
 
