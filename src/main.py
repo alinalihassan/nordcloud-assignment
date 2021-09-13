@@ -100,6 +100,15 @@ def get_literal_input(prompt: str):
 
     return None
 
+def catch_stdout_for_function(func: callable):
+    new_stdout = io.StringIO()
+    sys.stdout = new_stdout
+
+    func()
+
+    output = new_stdout.getvalue()
+    return output
+
 
 def main():
     link_stations: List[LinkStation] = []
@@ -115,16 +124,29 @@ def main():
     find_best_station_for_devices(link_stations, devices)
 
 def cloud_function(request):
-    # Catch input to string to serve it back
-    new_stdout = io.StringIO()  
-    sys.stdout = new_stdout
+    # Get parameters
+    params = request.get_json()
 
-    sample_run()
+    if 'run-sample' in params and params.get('run-sample') == True:
+        output = catch_stdout_for_function(sample_run)
 
-    output = new_stdout.getvalue()
+        return {'statusCode': 200, 'body': output}
 
-    return output
+    elif 'link-stations' in params and 'devices' in params:
+        link_stations: List[LinkStation] = []
+        devices: List[Device] = []
 
+        for station in params.get('link-stations'):
+            link_stations.append(LinkStation(x=station['x'], y=station['y'], reach=station['reach']))
+
+        for device in params.get('devices'):
+            devices.append(Device(x=device['x'], y=device['y']))
+
+        output = catch_stdout_for_function(lambda: find_best_station_for_devices(link_stations, devices))
+
+        return {'statusCode': 200, 'body': output}
+
+    return {'statusCode': 400, 'body': 'Bad request'}
 
 if __name__ == '__main__':
     run_sample = input("Run sample? (y/n): ") == 'y'
