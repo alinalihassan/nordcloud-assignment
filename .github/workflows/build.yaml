@@ -33,13 +33,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    # - name: Set up Google Cloud
-    #   uses: google-github-actions/setup-gcloud@master
-    #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    #   with:
-    #     project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
-    #     service_account_key: ${{ secrets.GCLOUD_SERVICE_KEY }}
-    #     export_default_credentials: true
+    - uses: hashicorp/setup-terraform@v1
 
     - name: Terraform Format
       id: fmt
