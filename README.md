@@ -122,16 +122,11 @@ For this step, you will need to visit the dashboard:
 
 ### 🔒 Configuring secrets
 
-The configuration includes an example configuration file named `terraform.tfvars.example`. You need to supply the `PROJECT_ID` from earlier
-and a region. Please note that the Netherlands region (europe-west4) does not support Cloud Functions. You can check out more details about regions
-and available features per region [here](https://cloud.google.com/about/locations).
+Replace the variables in `variables.tf` to use your Project ID and GCP region. Please note that The Netherlands region (europe-west4) does not support Cloud Functions. You can check out more details about regions and available features per region [here](https://cloud.google.com/about/locations).
 
-Copy the file and name it `terraform.tfvars` in the same directory. Then modify the project with your `PROJECT_ID` and `region`.
+Aditionally, you need to change `versions.tf` to use your Terraform Cloud account.
 
-```hcl
-project = "PROJECT_ID"
-region  = "europe-west6"
-```
+On GitHub, you need to set up GCLOUD_CREDENTIALS and TF_API_TOKEN for CI/CD to work.
 
 ### ⚡ Deploying
 
@@ -193,7 +188,7 @@ gcloud projects delete PROJECT_ID
 
 ## ⚙️ CI/CD
 
-The pipelines are meant to check that the build is suitable. The deploy phase is commented out. Unfortunately since I chose to keep the state file locally, it's not possible to use Terraform in the CI/CD pipeline. There's also no linter since it's dependency-free.
+The pipelines are meant to check that the build is suitable. The deploy phase is commented out. Unfortunately since I chose to keep the state file locally, it's not possible to use Terraform in the CI/CD pipeline. There's also no Python linter since it's dependency-free.
 
 The pipelines are set up using [GitHub Actions](https://github.com/features/actions) and are located in `.github/workflows/`.
 
