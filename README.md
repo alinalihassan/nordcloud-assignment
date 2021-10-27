@@ -141,7 +141,14 @@ terraform apply
 
 We can now check the results, we'll make a request at the link provided in the output or directly in the console in [Cloud Functions](https://console.cloud.google.com/functions/list). For testing, you can try out the cloud function I host at [https://europe-west6-nordcloud-assignment.cloudfunctions.net/my-function](https://europe-west6-nordcloud-assignment.cloudfunctions.net/my-function) using cURL or Postman for example.
 
-Example JSON
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/c55f5b06d6b44cb0abe7?action=collection%2Fimport)
+
+cURL
+```shell
+curl -X POST https://europe-west6-nordcloud-assignment.cloudfunctions.net/my-function -H "Content-Type:application/json" -d '{"link-stations":[{"x": 0,"y": 0,"reach": 10}],"devices": [{"x": 1,"y": 0}]}'
+```
+
+Example Request
 ```json
 {
   "run-sample": false,
@@ -159,11 +166,6 @@ Example JSON
     }
   ]
 }
-```
-
-cURL
-```shell
-curl -X POST https://europe-west6-nordcloud-assignment.cloudfunctions.net/my-function -H "Content-Type:application/json" -d '{"link-stations":[{"x": 0,"y": 0,"reach": 10}],"devices": [{"x": 1,"y": 0}]}'
 ```
 
 Response
