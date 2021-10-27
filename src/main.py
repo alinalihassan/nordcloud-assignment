@@ -90,12 +90,15 @@ def get_literal_input(prompt: str) -> List[Tuple]:
     while (True):
         try:
             value = literal_eval(input(prompt))
+
             # Comma separated tuples
             if type(value) is list and type(value[0]) is tuple:
                 return value
+
             # Single tuple
             elif type(value) is tuple:
                 return [value]
+
             raise ValueError
         except Exception:
             print("Invalid input, please try again. Example: (1,2,3), (4,5,6)")
@@ -127,6 +130,7 @@ def main():
 
     find_best_station_for_devices(link_stations, devices)
 
+
 def cloud_function(request) -> dict:
     # Get parameters
     params = request.get_json()
@@ -151,6 +155,7 @@ def cloud_function(request) -> dict:
         return {'statusCode': 200, 'body': output}
 
     return {'statusCode': 400, 'body': 'Bad request'}
+
 
 if __name__ == '__main__':
     run_sample = input("Run sample? (y/n): ") == 'y'
