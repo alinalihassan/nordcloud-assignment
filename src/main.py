@@ -32,7 +32,7 @@ class LinkStation(Point):
     """
     reach: float
 
-    def get_power(self, device: 'Device'):
+    def get_power(self, device: 'Device') -> float:
         distance = self.get_distance_to(device)
         return (self.reach - distance) ** 2 if self.reach > distance else 0
 
@@ -83,7 +83,9 @@ def sample_run():
 
     find_best_station_for_devices(link_stations, devices)
 
-def get_literal_input(prompt: str):
+
+# Helper function to get literal input from user prompt, verifies if input is valid and in the correct format
+def get_literal_input(prompt: str) -> List[Tuple]:
     # Retry until input is valid
     while (True):
         try:
@@ -100,7 +102,9 @@ def get_literal_input(prompt: str):
 
     return None
 
-def catch_stdout_for_function(func: callable):
+
+# Helper function to catch stdout from a function
+def catch_stdout_for_function(func: callable) -> str:
     new_stdout = io.StringIO()
     sys.stdout = new_stdout
 
@@ -123,7 +127,7 @@ def main():
 
     find_best_station_for_devices(link_stations, devices)
 
-def cloud_function(request):
+def cloud_function(request) -> dict:
     # Get parameters
     params = request.get_json()
 
