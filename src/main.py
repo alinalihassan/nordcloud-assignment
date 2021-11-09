@@ -103,8 +103,6 @@ def get_literal_input(prompt: str) -> List[Tuple]:
         except Exception:
             print("Invalid input, please try again. Example: (1,2,3), (4,5,6)")
 
-    return None
-
 
 # Helper function to catch stdout from a function
 def catch_stdout_for_function(func: callable) -> str:
