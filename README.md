@@ -45,6 +45,7 @@ Below is a list of most of them and the reason why.
 - [Python](https://www.python.org/): I recommend using the official binaries provided by the Python Software Foundation.
 - [Terraform](https://www.terraform.io): Optional, required for deploying to the cloud.
 - [Google Cloud Platform](https://cloud.google.com): Optional, cloud vendor of choice, we will need to use some cli operations. You can use the web console instead.
+- [Terraform Cloud](https://www.terraform.io/cloud): Optional, fully-featured Terraform backend, free for most of its features.
 
 ### 🖥️ Local installation
 
@@ -190,7 +191,7 @@ gcloud projects delete PROJECT_ID
 
 ## ⚙️ CI/CD
 
-The pipelines are meant to check that the build is suitable. The deploy phase is commented out. Unfortunately since I chose to keep the state file locally, it's not possible to use Terraform in the CI/CD pipeline. There's also no Python linter since it's dependency-free.
+The pipelines are meant to check that the build is suitable, and once that is the case, it will deploy the infrastructure to GCP. The backend of choice where the state file is stored is Terraform Cloud, which is integrated in the pipelines. There's no Python linter unfortunately since it's dependency-free.
 
 The pipelines are set up using [GitHub Actions](https://github.com/features/actions) and are located in `.github/workflows/`.
 
