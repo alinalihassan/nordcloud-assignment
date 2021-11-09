@@ -135,7 +135,7 @@ def cloud_function(request) -> dict:
     # Get parameters
     params = request.get_json()
 
-    if 'run-sample' in params and params.get('run-sample') == True:
+    if 'run-sample' in params and params.get('run-sample') is True:
         output = catch_stdout_for_function(sample_run)
 
         return {'statusCode': 200, 'body': output}
